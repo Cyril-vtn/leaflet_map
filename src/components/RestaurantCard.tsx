@@ -1,5 +1,7 @@
+import { Badge, Text, Tooltip } from '@chakra-ui/react';
 import { RestaurantType } from '../api.type'
-
+import { FaStar, FaStarHalf } from "react-icons/fa";
+import { MdFavoriteBorder } from "react-icons/md";
 export const RestaurantCard = ({
   restaurant,
   onClick,
@@ -28,24 +30,45 @@ export const RestaurantCard = ({
 
     return false;
   }; return (
-    <div className='border-b w-full border-gray-400 cursor-pointer hover:bg-gray-50 transition duration-200'
+    <div className=' p-3 border-b w-full bg-gray-900 cursor-pointer hover:bg-gray-800 transition duration-200'
       onClick={() => onClick(restaurant)}>
-      <div className='p-2'>
-        <h3 className='text-l font-bold'>{restaurant.name}</h3>
+      <div className=' text-white flex flex-col gap-1'>
+        <div className='flex justify-between items-center'>
+        <Text fontSize={'large'} fontWeight={'bold'}>{restaurant.name}</Text>
+          {/* adding fav icon */}
+          <MdFavoriteBorder className=" text-lg inline-block text-gray-100 align-middle hover:text-red-500 transition-all duration-200" />
+        </div>
         <div className='flex items-center'>
-          <div className='flex items-center'>
-            <span className='mr-1' role='img' aria-label='stars'>
+          <div className='flex items-center mr-2 justify-center'>
+            <span className='mr-1 text-sm font-bold'>
               {restaurant.stars}</span>
-            {[...Array(restaurant.stars)].map((_, i) => (
-              <svg key={i} className='w-4 h-4 text-yellow-500' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M10 15.27L16.18 19l-1.64-7.03L22 9.24l-7.19-.61L10 2 7.19 8.63 0 9.24l5.46 2.73L3.82 19z' />
-              </svg>
-            ))}
+            {
+              // Afficher les étoiles complètes
+              [...Array(Math.floor(restaurant.stars))].map((_, i) => (
+                <span key={i} className='mr-[3px]' role='img' aria-label='star'>
+                  <FaStar color={'#ffc107'} />
+                </span>
+              ))
+            }
+            {
+              // Afficher une demi-étoile si nécessaire
+              restaurant.stars % 1 !== 0 && (
+                <span className='mr-[3px]' role='img' aria-label='half star'>
+                  <FaStarHalf color={'#ffc107'} />
+                </span>
+              )
+            }
           </div>
-          <p className='ml-2 text-sm text-gray-500'>{isOpen() ? 'Ouvert' : 'Fermé'}</p>
+          {isOpen() ? (
+            <Badge colorScheme='green'>Ouvert</Badge>
+          ) : (
+            <Badge colorScheme='red'>Fermé</Badge>
+          )}
         </div>
         <p className='text-sm'>{restaurant.address}</p>
-        <p className='text-center'>{restaurant.description}</p>
+        <Tooltip label={restaurant.description} aria-label="A tooltip" p={2} color={'gray.900'} bg={'gray.100'}>
+          <Text noOfLines={1}>{restaurant.description}</Text>
+        </Tooltip>
       </div>
     </div>
   )
