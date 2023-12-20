@@ -34,7 +34,7 @@ export const RestaurantCard = ({
       onClick={() => onClick(restaurant)}>
       <div className=' text-white flex flex-col gap-1'>
         <div className='flex justify-between items-center'>
-        <Text fontSize={'large'} fontWeight={'bold'}>{restaurant.name}</Text>
+          <Text fontSize={'large'} fontWeight={'bold'}>{restaurant.name}</Text>
           {/* adding fav icon */}
           <MdFavoriteBorder className=" text-lg inline-block text-gray-100 align-middle hover:text-red-500 transition-all duration-200" />
         </div>
@@ -66,7 +66,7 @@ export const RestaurantCard = ({
           )}
         </div>
         <p className='text-sm'>{restaurant.address}</p>
-        <Tooltip label={restaurant.description} aria-label="A tooltip" p={2} color={'gray.900'} bg={'gray.100'}>
+        <Tooltip hasArrow label={restaurant.description} aria-label="A tooltip" p={2} color={'gray.900'} bg={'gray.100'}>
           <Text noOfLines={1}>{restaurant.description}</Text>
         </Tooltip>
       </div>

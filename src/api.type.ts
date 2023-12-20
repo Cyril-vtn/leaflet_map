@@ -17,3 +17,10 @@ export type RestaurantType = {
   },
   // menu: MenuType[], don't know if I add this yet
 }
+
+
+export type User = {
+  email: string;
+  password: string;
+  name?: string;
+};
