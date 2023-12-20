@@ -1,16 +1,19 @@
-import { Avatar, AvatarBadge, Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { Avatar, AvatarBadge, Button, Menu, MenuButton, MenuItem, MenuList, Tooltip } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import './App.css'
 import { Map } from './components/Map'
 import { SearchList } from './components/SearchList'
 import { DUMMY_DATA } from './data/DUMMY_DATA'
 import { RestaurantType } from './api.type';
+import { Modal } from './components/Modal';
 
 function App() {
   const [userLocation, setUserLocation] = useState<[number, number]>([0, 0]);
   const [zoom, setZoom] = useState(5);
   const [isUserLocated, setIsUserLocated] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState<RestaurantType | null>(null);
+  const [user, setUser] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -19,6 +22,10 @@ function App() {
       setIsUserLocated(true);
     });
   }, []);
+
+  const handleSignIn = () => {
+    setIsOpen(true);
+  };
 
   return (
     <div className='bg-gray-900 h-screen w-screen flex flex-col-reverse sm:flex-row'>
@@ -36,7 +43,9 @@ function App() {
       <div className="flex flex-col w-full h-full">
         <div className="bg-gray-900 w-full h-[61px] flex flex-row justify-between items-center pr-6 pl-6">
           <div>
-            <Button size={"sm"} colorScheme="facebook">Ajouter un restaurant</Button>
+            <Tooltip label={!user ? "Connectez-vous pour ajouter un restaurant" : ""} hasArrow>
+              <Button size={"sm"} isDisabled={!user} colorScheme="facebook">Ajouter un restaurant</Button>
+            </Tooltip>
           </div>
           <div className="flex flex-row items-center">
             <Menu>
@@ -46,8 +55,15 @@ function App() {
                 </Avatar>
               </MenuButton>
               <MenuList zIndex={9999}>
-                <MenuItem>Mon profil</MenuItem>
-                <MenuItem>Se déconnecter</MenuItem>
+                {user ?
+                  <>
+                    <MenuItem>Mon profil</MenuItem>
+                    <MenuItem>Se déconnecter</MenuItem>
+                  </>
+                  : <MenuItem onClick={handleSignIn}>Se connecter</MenuItem>}
+
+
+
               </MenuList>
             </Menu>
 
@@ -57,7 +73,10 @@ function App() {
           <Map restaurants={DUMMY_DATA.restaurants} userLocation={userLocation} zoom={zoom} isUserLocated={isUserLocated} selectedRestaurant={selectedRestaurant} />
         </div>
       </div>
-    </div >
+      {/* Modal */}
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} setUser={setUser} />
+
+    </div>
   )
 }
 
