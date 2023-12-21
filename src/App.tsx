@@ -1,4 +1,4 @@
-import { Avatar, AvatarBadge, Button, Menu, MenuButton, MenuItem, MenuList, Tooltip } from '@chakra-ui/react'
+import { Avatar, AvatarBadge, Button, Menu, MenuButton, MenuItem, MenuList, Tooltip, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import './App.css'
 import { Map } from './components/Map'
@@ -6,6 +6,7 @@ import { SearchList } from './components/SearchList'
 import { DUMMY_DATA } from './data/DUMMY_DATA'
 import { RestaurantType } from './api.type';
 import { Modal } from './components/Modal';
+import { logoutUser } from './Appwrite/Auth';
 
 function App() {
   const [userLocation, setUserLocation] = useState<[number, number]>([0, 0]);
@@ -23,8 +24,27 @@ function App() {
     });
   }, []);
 
+  const Toast = useToast();
+  
+  const createToast = (message: string) => {
+    return (
+      Toast({
+        title: message,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+    )
+  }
+
   const handleSignIn = () => {
     setIsOpen(true);
+  };
+
+  const handleLogout = () => {
+    logoutUser();
+    setUser(null);
+    createToast('Vous êtes déconnecté');
   };
 
   return (
@@ -43,24 +63,24 @@ function App() {
       <div className="flex flex-col w-full h-full">
         <div className="bg-gray-900 w-full h-[61px] flex flex-row justify-between items-center pr-6 pl-6">
           <div>
-            <Tooltip label={!user ? "Connectez-vous pour ajouter un restaurant" : ""} hasArrow>
+            {/* <Tooltip label={!user ? "Connectez-vous pour ajouter un restaurant" : ""} hasArrow>
               <Button size={"sm"} isDisabled={!user} colorScheme="facebook">Ajouter un restaurant</Button>
-            </Tooltip>
+            </Tooltip> */}
           </div>
           <div className="flex flex-row items-center">
             <Menu>
-              <MenuButton >
+              <MenuButton _hover={{ opacity: 0.8 }} _focus={{ outline: 'none' }} _active={{ opacity: 0.8 }} as={Button} variant="ghost" colorScheme="facebook" size="sm">
                 <Avatar size={'sm'} cursor={"pointer"}>
-                  <AvatarBadge boxSize="1.25em" bg="green" />
+                  {/* <AvatarBadge boxSize="1.25em" bg="green" /> */}
                 </Avatar>
               </MenuButton>
-              <MenuList zIndex={9999}>
+              <MenuList zIndex={9999} bg={'gray.900'} color={'white'}>
                 {user ?
                   <>
-                    <MenuItem>Mon profil</MenuItem>
-                    <MenuItem>Se déconnecter</MenuItem>
+                    <MenuItem bg={'gray.900'} color={'white'}>Mon profil</MenuItem>
+                    <MenuItem bg={'gray.900'} color={'white'} onClick={handleLogout}>Se déconnecter</MenuItem>
                   </>
-                  : <MenuItem onClick={handleSignIn}>Se connecter</MenuItem>}
+                  : <MenuItem bg={'gray.900'} _hover={{background: 'gray.800'}} onClick={handleSignIn}>Se connecter</MenuItem>}
 
 
 
