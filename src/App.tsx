@@ -1,4 +1,4 @@
-import { Avatar, AvatarBadge, Button, Menu, MenuButton, MenuItem, MenuList, Tooltip, useToast } from '@chakra-ui/react'
+import { Avatar, Button, Menu, MenuButton, MenuItem, MenuList, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import './App.css'
 import { Map } from './components/Map'
